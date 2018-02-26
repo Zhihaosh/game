@@ -33,6 +33,12 @@ public class player : MonoBehaviour {
 	}
 
 	void TryJump(){
+		if (IsOver) {
+			Time.timeScale = 0;
+		}
+		if (IsJump) {
+			playerRigidbody2D.AddForce (Vector2.up * yForce);
+		}
 		if (IsGround && JumpKey) {
 			playerRigidbody2D.AddForce (Vector2.up * yForce);
 		}
@@ -51,6 +57,8 @@ public class player : MonoBehaviour {
 	public Transform groundCheck;
 
 	public LayerMask groundLayer;
+	public LayerMask jumpLayer;
+	public LayerMask deathLayer;
 
 	public bool grounded;
 	public float distance;
@@ -61,6 +69,26 @@ public class player : MonoBehaviour {
 			Vector2 end = new Vector2 (start.x, start.y - distance);
 			Debug.DrawLine (start, end, Color.blue);
 			grounded = Physics2D.Linecast (start, end, groundLayer);
+			return grounded;
+		}
+	}
+
+	bool IsJump{
+		get{ 
+			Vector2 start = groundCheck.position;
+			Vector2 end = new Vector2 (start.x, start.y - distance);
+			Debug.DrawLine (start, end, Color.blue);
+			grounded = Physics2D.Linecast (start, end, jumpLayer);
+			return grounded;
+		}
+	}
+
+	bool IsOver{
+		get{ 
+			Vector2 start = groundCheck.position;
+			Vector2 end = new Vector2 (start.x, start.y - distance);
+			Debug.DrawLine (start, end, Color.blue);
+			grounded = Physics2D.Linecast (start, end, deathLayer);
 			return grounded;
 		}
 	}
